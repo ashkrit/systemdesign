@@ -1,8 +1,11 @@
 package org.planetscale.app;
 
+
+import org.tinylog.Logger;
+
 public class MainApp {
 
     public static void main(String[] args) {
-        System.out.println("Lets Start");
+        Logger.info("Lets Start");
     }
 }

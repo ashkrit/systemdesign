@@ -1,2 +1,2 @@
-# systemdesign
-Explore system design concepts and examples
+# system design
+Sketch/Design of Simple App that can scale to millions of users

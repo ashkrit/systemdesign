@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import org.planetscale.app.service.InMemoryUserRepository;
 import org.planetscale.app.service.UserRepository;
 import org.planetscale.app.service.UserService;
+import spark.Service;
 import spark.Spark;
 
 import java.util.UUID;
@@ -25,8 +26,8 @@ public class ServerApp {
 
 
     public static void startService(int port, UserRepository repository) {
-        Spark.port(port);
 
+        Spark.port(port);
         UserService service = new UserService(repository);
 
         get("/hello", (req, res) -> "Hello World");

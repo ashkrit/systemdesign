@@ -41,25 +41,8 @@ public class Level4App {
 
         LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));
 
-        Client browser = new Client() {
-            final HttpClient client = HttpClient.newHttpClient();
-
-            @Override
-            public String execute() {
-                return Level4App.execute(client, loadBalancer.url() + "users");
-            }
-
-
-        };
-
-        Client mobile = new Client() {
-            final HttpClient client = HttpClient.newHttpClient();
-
-            @Override
-            public String execute() {
-                return Level4App.execute(client, loadBalancer.url() + "users");
-            }
-        };
+        Client browser = browserClient(loadBalancer);
+        Client mobile = mobileClient(loadBalancer);
 
 
         IntStream.range(0, 10)
@@ -69,6 +52,30 @@ public class Level4App {
                 .forEach($ -> System.out.println(mobile.execute()));
 
 
+    }
+
+    private static Client mobileClient(LoadBalancer loadBalancer) {
+        return new Client() {
+            final HttpClient client = HttpClient.newHttpClient();
+
+            @Override
+            public String execute() {
+                return Level4App.execute(client, loadBalancer.url() + "users");
+            }
+        };
+    }
+
+    private static Client browserClient(LoadBalancer loadBalancer) {
+        return new Client() {
+            final HttpClient client = HttpClient.newHttpClient();
+
+            @Override
+            public String execute() {
+                return Level4App.execute(client, loadBalancer.url() + "users");
+            }
+
+
+        };
     }
 
     private static List<String> serverLists(int port) {

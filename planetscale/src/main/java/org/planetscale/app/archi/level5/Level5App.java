@@ -14,14 +14,15 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.time.Duration;
-import java.util.HashMap;
-import java.util.List;
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+import java.util.stream.Stream;
 
 /**
  * Concepts:
- * Database Cache for read query
+ * Database Cache for read query, in this example "users" method.
  */
 public class Level5App {
 
@@ -30,7 +31,11 @@ public class Level5App {
 
         int port = 8080;
 
-        UserRepository repository = createReplicatedRepo();
+        Set<String> cachedMethods = Stream.of("users")
+                .collect(Collectors.toSet());
+
+        UserRepository repository = CacheRepository.create(createReplicatedRepo(), cachedMethods);
+
         ServerApp.startService(port, repository);
 
         LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));

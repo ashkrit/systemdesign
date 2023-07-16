@@ -1,6 +1,6 @@
 package org.planetscale.app.archi;
 
-import org.planetscale.app.SparkApp;
+import org.planetscale.app.ServerApp;
 
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -13,7 +13,7 @@ public class Level1App {
     public static void main(String[] args) {
 
         String port = "8080";
-        SparkApp.main(new String[]{port});
+        ServerApp.main(new String[]{port});
 
         String url = String.format("http://localhost:%s/", port);
 

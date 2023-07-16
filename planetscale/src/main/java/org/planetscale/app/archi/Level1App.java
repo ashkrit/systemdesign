@@ -12,8 +12,8 @@ public class Level1App {
 
     public static void main(String[] args) {
 
-        String port = "8080";
-        ServerApp.main(new String[]{port});
+        int port = 8080;
+        ServerApp.startService(port);
 
         String url = String.format("http://localhost:%s/", port);
 

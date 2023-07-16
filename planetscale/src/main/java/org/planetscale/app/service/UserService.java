@@ -1,14 +1,12 @@
 package org.planetscale.app.service;
 
-import org.planetscale.app.service.UserRepository.User;
-
 import java.util.List;
 
 public class UserService {
 
-    public final UserRepository repository;
+    public final InMemoryUserRepository repository;
 
-    public UserService(UserRepository repository) {
+    public UserService(InMemoryUserRepository repository) {
         this.repository = repository;
     }
 

@@ -1,7 +1,7 @@
 package org.planetscale.app;
 
 import com.google.gson.Gson;
-import org.planetscale.app.service.UserRepository;
+import org.planetscale.app.service.InMemoryUserRepository;
 import org.planetscale.app.service.UserService;
 import spark.Spark;
 
@@ -14,9 +14,14 @@ public class ServerApp {
     public static void main(String[] args) {
 
         int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
+        startService(port);
+
+    }
+
+    public static void startService(int port) {
         Spark.port(port);
 
-        UserService service = new UserService(new UserRepository());
+        UserService service = new UserService(new InMemoryUserRepository());
 
         get("/hello", (req, res) -> "Hello World");
         get("/users", (req, res) -> {
@@ -38,7 +43,6 @@ public class ServerApp {
             return gson.toJson(service.users());
 
         });
-
     }
 
 

@@ -1,6 +1,6 @@
 package org.planetscale.app;
 
-import org.planetscale.app.service.UserRepository.User;
+import org.planetscale.app.service.User;
 
 public class UserRequest {
     public final String id;

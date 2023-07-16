@@ -1,4 +1,4 @@
-package org.planetscale.app;
+package org.planetscale.app.service;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class UserRepository {
 
-    record User(String id, String firstName, String lastName, String email) {
+    public record User(String id, String firstName, String lastName, String email) {
     }
 
 

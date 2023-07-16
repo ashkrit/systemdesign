@@ -1,7 +1,8 @@
 package org.planetscale.app;
 
 import com.google.gson.Gson;
-import org.planetscale.app.UserRepository.User;
+import org.planetscale.app.service.UserRepository;
+import org.planetscale.app.service.UserService;
 import spark.Spark;
 
 import java.util.UUID;
@@ -13,13 +14,13 @@ public class SparkApp {
     public static void main(String[] args) {
         Spark.port(8080);
 
-        UserRepository userRepository = new UserRepository();
+        UserService service = new UserService(new UserRepository());
         get("/hello", (req, res) -> "Hello World");
         get("/users", (req, res) -> {
 
             res.type("application/json");
 
-            return new Gson().toJson(userRepository.users());
+            return new Gson().toJson(service.users());
 
         });
         post("/user", (req, res) -> {
@@ -29,9 +30,9 @@ public class SparkApp {
 
             Gson gson = new Gson();
             UserRequest user = gson.fromJson(req.body(), UserRequest.class);
-            userRepository.register(user.as(UUID.randomUUID().toString()));
+            service.register(user.as(UUID.randomUUID().toString()));
 
-            return gson.toJson(userRepository.users());
+            return gson.toJson(service.users());
 
         });
 

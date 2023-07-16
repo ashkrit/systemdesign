@@ -4,9 +4,9 @@ import java.util.List;
 
 public class UserService {
 
-    public final InMemoryUserRepository repository;
+    public final UserRepository repository;
 
-    public UserService(InMemoryUserRepository repository) {
+    public UserService(UserRepository repository) {
         this.repository = repository;
     }
 

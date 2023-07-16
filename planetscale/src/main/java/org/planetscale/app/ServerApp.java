@@ -2,6 +2,7 @@ package org.planetscale.app;
 
 import com.google.gson.Gson;
 import org.planetscale.app.service.InMemoryUserRepository;
+import org.planetscale.app.service.UserRepository;
 import org.planetscale.app.service.UserService;
 import spark.Spark;
 
@@ -21,7 +22,8 @@ public class ServerApp {
     public static void startService(int port) {
         Spark.port(port);
 
-        UserService service = new UserService(new InMemoryUserRepository());
+        UserRepository repository = new InMemoryUserRepository();
+        UserService service = new UserService(repository);
 
         get("/hello", (req, res) -> "Hello World");
         get("/users", (req, res) -> {

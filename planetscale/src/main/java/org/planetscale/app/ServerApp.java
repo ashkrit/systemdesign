@@ -20,9 +20,13 @@ public class ServerApp {
     }
 
     public static void startService(int port) {
+        startService(port, new InMemoryUserRepository());
+    }
+
+
+    public static void startService(int port, UserRepository repository) {
         Spark.port(port);
 
-        UserRepository repository = new InMemoryUserRepository();
         UserService service = new UserService(repository);
 
         get("/hello", (req, res) -> "Hello World");
@@ -46,6 +50,4 @@ public class ServerApp {
 
         });
     }
-
-
 }

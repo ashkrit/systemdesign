@@ -13,6 +13,10 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.HashMap;
 
+/**
+ * Concepts :
+ * Permanent storage of data by using database
+ */
 public class Level2App {
 
     public static void main(String[] args) {

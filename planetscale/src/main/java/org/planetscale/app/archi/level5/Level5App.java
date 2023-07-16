@@ -1,11 +1,11 @@
-package org.planetscale.app.archi.level4;
+package org.planetscale.app.archi.level5;
 
 import org.h2.Driver;
 import org.planetscale.app.ServerApp;
 import org.planetscale.app.archi.Client;
 import org.planetscale.app.archi.level3.LoadBalancer;
+import org.planetscale.app.archi.level4.ReplicatedUserRepository;
 import org.planetscale.app.service.ConnectionHandler;
-import org.planetscale.app.service.DatabaseUserRepository;
 import org.planetscale.app.service.UserRepository;
 
 import java.net.URI;
@@ -20,27 +20,17 @@ import java.util.function.Function;
 import java.util.stream.IntStream;
 
 /**
- * Concepts :
- * Database connection to master/leader and replicator/follower for load balancing of write and read traffic.
+ * Concepts:
+ * Database Cache for read query
  */
-public class Level4App {
+public class Level5App {
 
     public static void main(String[] args) {
 
 
-        Function<ConnectionHandler, Connection> masterConnection = ConnectionHandler::openConnection;
-        Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
-        HashMap<String, String> config = new HashMap<>() {{
-            put("driverClassName", Driver.class.getName());
-            put("url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1");
-            put("user", "sa");
-            put("password", "sa");
-        }};
-
-        UserRepository repository = new ReplicatedUserRepository(config, masterConnection, replica);
-
         int port = 8080;
 
+        UserRepository repository = createReplicatedRepo();
         ServerApp.startService(port, repository);
 
         LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));
@@ -58,13 +48,27 @@ public class Level4App {
 
     }
 
+    private static UserRepository createReplicatedRepo() {
+        Function<ConnectionHandler, Connection> masterConnection = ConnectionHandler::openConnection;
+        Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
+        HashMap<String, String> config = new HashMap<>() {{
+            put("driverClassName", Driver.class.getName());
+            put("url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1");
+            put("user", "sa");
+            put("password", "sa");
+        }};
+
+        UserRepository repository = new ReplicatedUserRepository(config, masterConnection, replica);
+        return repository;
+    }
+
     private static Client mobileClient(LoadBalancer loadBalancer) {
         return new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
             public String execute() {
-                return Level4App.execute(client, loadBalancer.url() + "users");
+                return Level5App.execute(client, loadBalancer.url() + "users");
             }
         };
     }
@@ -75,7 +79,7 @@ public class Level4App {
 
             @Override
             public String execute() {
-                return Level4App.execute(client, loadBalancer.url() + "users");
+                return Level5App.execute(client, loadBalancer.url() + "users");
             }
 
 

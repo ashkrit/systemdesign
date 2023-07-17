@@ -15,7 +15,7 @@ import static spark.Spark.post;
 public class ServerApp {
     public static void main(String[] args) {
 
-        int port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
+        var port = args.length > 0 ? Integer.parseInt(args[0]) : 8080;
         startService(port);
 
     }
@@ -28,7 +28,7 @@ public class ServerApp {
     public static void startService(int port, UserRepository repository) {
 
         Spark.port(port);
-        UserService service = new UserService(repository);
+        var service = new UserService(repository);
 
         get("/hello", (req, res) -> "Hello World");
         get("/users", (req, res) -> {
@@ -43,8 +43,8 @@ public class ServerApp {
             res.type("application/json");
 
 
-            Gson gson = new Gson();
-            UserRequest user = gson.fromJson(req.body(), UserRequest.class);
+            var gson = new Gson();
+            var user = gson.fromJson(req.body(), UserRequest.class);
             service.register(user.as(UUID.randomUUID().toString()));
 
             return gson.toJson(service.users());

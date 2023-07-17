@@ -21,7 +21,7 @@ public class Level2App {
 
     public static void main(String[] args) {
 
-        int port = 8080;
+        var port = 8080;
         UserRepository repository = new DatabaseUserRepository(new HashMap<>() {{
             put("driverClassName", Driver.class.getName());
             put("url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1");
@@ -31,9 +31,9 @@ public class Level2App {
 
         ServerApp.startService(port,repository);
 
-        String url = String.format("http://localhost:%s/", port);
+        var url = String.format("http://localhost:%s/", port);
 
-        Client browser = new Client() {
+        var browser = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -44,7 +44,7 @@ public class Level2App {
 
         };
 
-        Client mobile = new Client() {
+        var mobile = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -62,7 +62,7 @@ public class Level2App {
 
     private static String execute(HttpClient client, String endPoint) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            var request = HttpRequest.newBuilder()
                     .uri(URI.create(endPoint))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")

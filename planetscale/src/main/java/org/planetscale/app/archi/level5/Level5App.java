@@ -30,18 +30,18 @@ public class Level5App {
     public static void main(String[] args) {
 
 
-        int port = 8080;
+        var port = 8080;
 
-        Set<String> cachedMethods = Set.of("users");
+        var cachedMethods = Set.of("users");
 
-        UserRepository repository = CacheRepository.create(createReplicatedRepo(), cachedMethods);
+        var repository = CacheRepository.create(createReplicatedRepo(), cachedMethods);
 
         ServerApp.startService(port, repository);
 
-        LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));
+        var loadBalancer = new LoadBalancer(serverLists(port));
 
-        Client browser = browserClient(loadBalancer);
-        Client mobile = mobileClient(loadBalancer);
+        var browser = browserClient(loadBalancer);
+        var mobile = mobileClient(loadBalancer);
 
 
         IntStream.range(0, 10)
@@ -58,7 +58,7 @@ public class Level5App {
         Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
 
 
-        Map<String, String> config = Map.of(
+        var config = Map.of(
                 "driverClassName", Driver.class.getName(),
                 "url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
                 "user", "sa",

@@ -16,6 +16,7 @@ import java.sql.Connection;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.IntStream;
 
@@ -30,23 +31,21 @@ public class Level4App {
 
         Function<ConnectionHandler, Connection> masterConnection = ConnectionHandler::openConnection;
         Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
-        HashMap<String, String> config = new HashMap<>() {{
-            put("driverClassName", Driver.class.getName());
-            put("url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1");
-            put("user", "sa");
-            put("password", "sa");
-        }};
+        var config = Map.of(
+                "driverClassName", Driver.class.getName(),
+                "url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
+                "user", "sa",
+                "password", "sa");
 
-        UserRepository repository = new ReplicatedUserRepository(config, masterConnection, replica);
-
-        int port = 8080;
+        var repository = new ReplicatedUserRepository(config, masterConnection, replica);
+        var port = 8080;
 
         ServerApp.startService(port, repository);
 
-        LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));
+        var loadBalancer = new LoadBalancer(serverLists(port));
 
-        Client browser = browserClient(loadBalancer);
-        Client mobile = mobileClient(loadBalancer);
+        var browser = browserClient(loadBalancer);
+        var mobile = mobileClient(loadBalancer);
 
 
         IntStream.range(0, 10)
@@ -90,7 +89,7 @@ public class Level4App {
 
     private static String execute(HttpClient client, String endPoint) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            var request = HttpRequest.newBuilder()
                     .uri(URI.create(endPoint))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")

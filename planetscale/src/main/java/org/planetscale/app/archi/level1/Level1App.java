@@ -17,12 +17,12 @@ public class Level1App {
 
     public static void main(String[] args) {
 
-        int port = 8080;
+        var port = 8080;
         ServerApp.startService(port);
 
-        String url = String.format("http://localhost:%s/", port);
+        var url = String.format("http://localhost:%s/", port);
 
-        Client browser = new Client() {
+        var browser = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -33,7 +33,7 @@ public class Level1App {
 
         };
 
-        Client mobile = new Client() {
+        var mobile = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -51,7 +51,7 @@ public class Level1App {
 
     private static String execute(HttpClient client, String endPoint) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            var request = HttpRequest.newBuilder()
                     .uri(URI.create(endPoint))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")

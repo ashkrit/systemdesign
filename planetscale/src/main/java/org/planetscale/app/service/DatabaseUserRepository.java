@@ -28,7 +28,7 @@ public class DatabaseUserRepository implements UserRepository {
     private void registerTables() {
         try (Connection connection = connectionHandler.openConnection()) {
 
-            String table = String.format("CREATE TABLE %s (ID VARCHAR, CONTENT VARCHAR)", "users");
+            var table = String.format("CREATE TABLE %s (ID VARCHAR, CONTENT VARCHAR)", "users");
 
             System.out.println(table);
 
@@ -44,18 +44,18 @@ public class DatabaseUserRepository implements UserRepository {
     @Override
     public void register(User u) {
 
-        String value = new Gson().toJson(u);
-        String key = u.id();
+        var value = new Gson().toJson(u);
+        var key = u.id();
 
         try (Connection connection = connectionHandler.openConnection()) {
 
-            String insert = """
+            var insert = """
                     INSERT INTO  %s (ID ,CONTENT)
                     VALUES (?,?)
                     """.formatted("users");
 
-            PreparedStatement statement = connection.prepareStatement(insert);
-            int index = 1;
+            var statement = connection.prepareStatement(insert);
+            var index = 1;
             statement.setString(index++, key);
             statement.setString(index++, value);
             statement.executeUpdate();
@@ -69,16 +69,16 @@ public class DatabaseUserRepository implements UserRepository {
 
     @Override
     public List<User> users() {
-        String sql = String.format("SELECT ID, CONTENT FROM %s", "users");
+        var sql = String.format("SELECT ID, CONTENT FROM %s", "users");
 
-        try (Connection connection = connectionHandler.openConnection();
-             ResultSet rs = connection.createStatement().executeQuery(sql)) {
+        try (var connection = connectionHandler.openConnection();
+             var rs = connection.createStatement().executeQuery(sql)) {
             List<User> users = new ArrayList<>();
 
-            Gson g = new Gson();
+            var g = new Gson();
             while (rs.next()) {
-                String value = rs.getString("CONTENT");
-                UserRequest user = g.fromJson(value, UserRequest.class);
+                var value = rs.getString("CONTENT");
+                var user = g.fromJson(value, UserRequest.class);
                 users.add(user.as(user.id));
             }
             return users;

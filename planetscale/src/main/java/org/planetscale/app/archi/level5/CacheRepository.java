@@ -24,8 +24,8 @@ public class CacheRepository implements InvocationHandler {
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
 
 
-        String key = cacheKey(method, args);
-        boolean cache = cachedMethods.contains(method.getName());
+        var key = cacheKey(method, args);
+        var cache = cachedMethods.contains(method.getName());
         if (cache) {
             synchronized (cacheResult) {
                 if (cacheResult.containsKey(key)) {
@@ -35,7 +35,7 @@ public class CacheRepository implements InvocationHandler {
             }
         }
 
-        Object result = method.invoke(repository, args);
+        var result = method.invoke(repository, args);
         cacheIfRequired(key, cache, result);
 
         return result;
@@ -50,9 +50,8 @@ public class CacheRepository implements InvocationHandler {
     }
 
     private static String cacheKey(Method method, Object[] args) {
-        int hash = args != null ? Arrays.hashCode(args) : 0;
-        String key = String.format("%s_%s", method.getName(), hash);
-        return key;
+        var hash = args != null ? Arrays.hashCode(args) : 0;
+        return String.format("%s_%s", method.getName(), hash);
     }
 
     public static UserRepository create(UserRepository target,Set<String> methods) {

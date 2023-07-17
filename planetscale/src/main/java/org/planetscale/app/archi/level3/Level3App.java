@@ -26,15 +26,15 @@ public class Level3App {
     public static void main(String[] args) {
 
 
-        UserRepository repository = dbRepo();
+        var repository = dbRepo();
 
-        int port = 8080;
+        var port = 8080;
 
         ServerApp.startService(port, repository);
 
-        LoadBalancer loadBalancer = new LoadBalancer(serverLists(port));
+        var loadBalancer = new LoadBalancer(serverLists(port));
 
-        Client browser = new Client() {
+        var browser = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -45,7 +45,7 @@ public class Level3App {
 
         };
 
-        Client mobile = new Client() {
+        var mobile = new Client() {
             final HttpClient client = HttpClient.newHttpClient();
 
             @Override
@@ -81,7 +81,7 @@ public class Level3App {
 
     private static String execute(HttpClient client, String endPoint) {
         try {
-            HttpRequest request = HttpRequest.newBuilder()
+            var request = HttpRequest.newBuilder()
                     .uri(URI.create(endPoint))
                     .timeout(Duration.ofMinutes(1))
                     .header("Content-Type", "application/json")

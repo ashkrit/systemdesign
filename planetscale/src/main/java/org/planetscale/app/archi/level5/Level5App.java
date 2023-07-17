@@ -14,11 +14,12 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.sql.Connection;
 import java.time.Duration;
-import java.util.*;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 import java.util.stream.IntStream;
-import java.util.stream.Stream;
 
 /**
  * Concepts:
@@ -31,8 +32,7 @@ public class Level5App {
 
         int port = 8080;
 
-        Set<String> cachedMethods = Stream.of("users")
-                .collect(Collectors.toSet());
+        Set<String> cachedMethods = Set.of("users");
 
         UserRepository repository = CacheRepository.create(createReplicatedRepo(), cachedMethods);
 
@@ -56,15 +56,15 @@ public class Level5App {
     private static UserRepository createReplicatedRepo() {
         Function<ConnectionHandler, Connection> masterConnection = ConnectionHandler::openConnection;
         Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
-        HashMap<String, String> config = new HashMap<>() {{
-            put("driverClassName", Driver.class.getName());
-            put("url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1");
-            put("user", "sa");
-            put("password", "sa");
-        }};
 
-        UserRepository repository = new ReplicatedUserRepository(config, masterConnection, replica);
-        return repository;
+
+        Map<String, String> config = Map.of(
+                "driverClassName", Driver.class.getName(),
+                "url", "jdbc:h2:mem:myDb;DB_CLOSE_DELAY=-1",
+                "user", "sa",
+                "password", "sa");
+
+        return new ReplicatedUserRepository(config, masterConnection, replica);
     }
 
     private static Client mobileClient(LoadBalancer loadBalancer) {

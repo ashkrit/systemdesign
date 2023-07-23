@@ -1,12 +1,14 @@
 package org.planetscale.app;
 
 import com.google.gson.Gson;
+import org.planetscale.app.service.EventQueue;
+import org.planetscale.app.service.EventQueue.TotalUserCount;
 import org.planetscale.app.service.InMemoryUserRepository;
 import org.planetscale.app.service.UserRepository;
 import org.planetscale.app.service.UserService;
-import spark.Service;
 import spark.Spark;
 
+import java.util.Map;
 import java.util.UUID;
 
 import static spark.Spark.get;
@@ -48,6 +50,53 @@ public class ServerApp {
             service.register(user.as(UUID.randomUUID().toString()));
 
             return gson.toJson(service.users());
+
+        });
+    }
+
+    public static void startService(int port, UserRepository repository, EventQueue queue, Map<String,Object> reply) {
+        Spark.port(port);
+        var service = new UserService(repository);
+
+        get("/hello", (req, res) -> "Hello World");
+        get("/users", (req, res) -> {
+
+            res.type("application/json");
+
+            return new Gson().toJson(service.users());
+
+        });
+        post("/user", (req, res) -> {
+
+            res.type("application/json");
+
+
+            var gson = new Gson();
+            var user = gson.fromJson(req.body(), UserRequest.class);
+            service.register(user.as(UUID.randomUUID().toString()));
+
+            return gson.toJson(service.users());
+
+        });
+
+        post("/analytics/usercount", (req, res) -> {
+
+            res.type("application/json");
+            var userCount = new TotalUserCount(UUID.randomUUID().toString());
+
+            queue.publish(userCount);
+
+            var gson = new Gson();
+            return gson.toJson(userCount);
+
+        });
+
+        get("/analytics/usercount/:id", (req, res) -> {
+
+            res.type("application/json");
+            String id = req.params("id");
+            var gson = new Gson();
+            return gson.toJson(reply.remove(id));
 
         });
     }

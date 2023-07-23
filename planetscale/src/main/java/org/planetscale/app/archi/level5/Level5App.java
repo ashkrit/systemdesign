@@ -34,7 +34,8 @@ public class Level5App {
 
         var cachedMethods = Set.of("users");
 
-        var repository = CacheRepository.create(createReplicatedRepo(), cachedMethods);
+        var repository = CacheRepository
+                .create(createReplicatedRepo(), cachedMethods);
 
         ServerApp.startService(port, repository);
 
@@ -53,7 +54,7 @@ public class Level5App {
 
     }
 
-    private static UserRepository createReplicatedRepo() {
+    public static UserRepository createReplicatedRepo() {
         Function<ConnectionHandler, Connection> masterConnection = ConnectionHandler::openConnection;
         Function<ConnectionHandler, Connection> replica = ConnectionHandler::openConnection;
 
